@@ -11,8 +11,9 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(ProfileFragment())
-        adapter.addFragment(ArFragment())
+        adapter.addFragment(CameraFragment())
         adapter.addFragment(DashBoardFragment())
         viewPager.adapter = adapter
+        viewPager.currentItem = 1
     }
 }
