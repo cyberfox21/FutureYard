@@ -23,7 +23,7 @@ class CameraFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootview = inflater.inflate(R.layout.fragment_camera, container, false)
+        rootview = inflater.inflate(R.layout.fragment_ar, container, false)
         return rootview
     }
 

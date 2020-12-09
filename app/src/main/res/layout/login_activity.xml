@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="пароль"
+        android:layout_margin="20dp"
+        style="@style/edit_text_style"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            style="@style/edit_text_style"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_login"
+        style="@style/edit_text_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:hint="логин"
+        app:layout_constraintBottom_toTopOf="@+id/et_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            style="@style/edit_text_style"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:backgroundTint="#fcee09"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:shadowColor="#fcee09"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:text="  в о й т и         "
+        app:icon="@drawable/ic_baseline_person_24"
+        app:layout_constraintBottom_toTopOf="@+id/btn_toregister"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="#000000" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_toregister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#fcee09"
+        android:shadowColor="#fcee09"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:text="  р е г и с т р а ц и я        "
+        app:icon="@drawable/abc_vector_test"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="#000000" />
+</androidx.constraintlayout.widget.ConstraintLayout>
