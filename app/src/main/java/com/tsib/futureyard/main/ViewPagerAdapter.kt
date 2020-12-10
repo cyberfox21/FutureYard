@@ -1,4 +1,4 @@
-package com.tsib.futureyard
+package com.tsib.futureyard.main
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

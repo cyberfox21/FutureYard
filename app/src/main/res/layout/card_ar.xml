@@ -23,7 +23,7 @@
             android:layout_width="60dp"
             android:layout_height="0dp"
             android:layout_margin="5dp"
-            android:src="@drawable/fonar"
+            android:src="@drawable/ic_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
