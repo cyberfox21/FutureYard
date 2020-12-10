@@ -6,23 +6,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_password"
+        style="@style/edit_text_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
         android:hint="пароль"
-        android:layout_margin="20dp"
-        style="@style/edit_text_style"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/divider3">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
             style="@style/edit_text_style"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -32,15 +31,17 @@
         style="@style/edit_text_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
         android:hint="логин"
-        app:layout_constraintBottom_toTopOf="@+id/et_password"
+        app:layout_constraintBottom_toTopOf="@+id/divider3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
             style="@style/edit_text_style"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -60,13 +61,13 @@
         android:paddingBottom="10dp"
         android:text="  в о й т и         "
         app:icon="@drawable/ic_baseline_person_24"
-        app:layout_constraintBottom_toTopOf="@+id/btn_take_photo"
+        app:layout_constraintBottom_toTopOf="@+id/btn_toregister"
         app:layout_constraintStart_toStartOf="parent"
         app:rippleColor="#000000" />
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_take_photo"
+        android:id="@+id/btn_toregister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
@@ -82,4 +83,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:rippleColor="#000000" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_cyberyard"
+        app:layout_constraintBottom_toTopOf="@+id/et_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

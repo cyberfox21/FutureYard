@@ -5,10 +5,17 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">#000</item>
         <item name="android:colorButtonNormal">#F2EC00</item>
-        <item name="shapeAppearanceSmallComponent">@style/shape_appearance</item>
+        <item name="shapeAppearanceSmallComponent">@style/shape_appearance_1</item>
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:navigationBarColor">#121212</item>
+        <item name="colorControlActivated">#52F1FD</item>
     </style>
+
+<style name="Registration_style" parent="AppTheme">
+
+    <item name="shapeAppearanceSmallComponent">@style/shape_appearance_2</item>
+
+</style>
 
 
     <style name="text_style" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -22,7 +29,7 @@
 
 
     <style name="buttonf" parent="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
-    <item name="shapeAppearanceSmallComponent">@style/shape_appearance</item>
+    <item name="shapeAppearanceSmallComponent">@style/shape_appearance_1</item>
 
     </style>
 
@@ -34,14 +41,24 @@
         <item name="colorControlActivated">#52F1FD</item>
         <item name="colorControlHighlight">#52F1FD</item>
 
+
     </style>
 
 
-    <style name="shape_appearance" parent="@style/ShapeAppearance.MaterialComponents.SmallComponent">
+    <style name="shape_appearance_1" parent="@style/ShapeAppearance.MaterialComponents.SmallComponent">
     <item name="cornerFamily">cut</item>
     <item name="cornerSizeTopRight">16dp</item>
         <item name="cornerSizeTopLeft">2dp</item>
         <item name="cornerSizeBottomRight">4dp</item>
+        <item name="cornerSizeBottomLeft">2dp</item>
+    </style>
+
+
+    <style name="shape_appearance_2" parent="@style/ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSizeTopRight">4dp</item>
+        <item name="cornerSizeTopLeft">2dp</item>
+        <item name="cornerSizeBottomRight">16dp</item>
         <item name="cornerSizeBottomLeft">2dp</item>
     </style>
 
