@@ -2,6 +2,7 @@ package com.tsib.futureyard.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.make.dots.dotsindicator.DotsIndicator
 import com.tsib.futureyard.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -17,5 +18,7 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(DashBoardFragment())
         viewPager.adapter = adapter
         viewPager.currentItem = 1
+        dotsIndicator.setViewPager(viewPager)
+        viewPager.adapter?.registerDataSetObserver(dotsIndicator.dataSetObserver)
     }
 }

@@ -1,14 +1,21 @@
 package com.tsib.futureyard.main.horizontalrecycler
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tsib.futureyard.R
+import com.tsib.futureyard.main.CameraFragment
 import kotlinx.android.synthetic.main.card_ar.view.*
 
-class ArRecyclerAdapter(list: ArrayList<ArCard>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+@Suppress("DEPRECATION")
+class ArRecyclerAdapter(list: ArrayList<ArCard>, cf: CameraFragment)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     val cardlist = list
+    val cf = cf
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ArRecyclerHolder(LayoutInflater.from(parent.context)
             .inflate(R.layout.card_ar, parent, false))
@@ -28,6 +35,9 @@ class ArRecyclerAdapter(list: ArrayList<ArCard>) : RecyclerView.Adapter<Recycler
             itemView.card_title.text = card.title
             itemView.card_subtitle.text = card.subtitle
             itemView.card_description.text = card.description
+            itemView.setOnClickListener {
+                cf.selected = position
+            }
         }
     }
 

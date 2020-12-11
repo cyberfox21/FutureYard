@@ -1,29 +1,38 @@
 package com.tsib.futureyard.main
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.ar.core.HitResult
 import com.google.ar.sceneform.AnchorNode
+import com.google.ar.sceneform.HitTestResult
+import com.google.ar.sceneform.math.Vector3
+import com.google.ar.sceneform.rendering.FixedHeightViewSizer
+import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.ArFragment
+import com.google.ar.sceneform.ux.TransformableNode
 import com.tsib.futureyard.Constants.AR_RECYCLE_SIZE
 import com.tsib.futureyard.Constants.CAMERA
 import com.tsib.futureyard.Constants.TAG
 import com.tsib.futureyard.Constants.descriptions
-import com.tsib.futureyard.Constants.photos
+import com.tsib.futureyard.Constants.icons
+import com.tsib.futureyard.Constants.images
 import com.tsib.futureyard.Constants.subtitles
 import com.tsib.futureyard.Constants.titles
 import com.tsib.futureyard.R
 import com.tsib.futureyard.main.horizontalrecycler.ArCard
 import com.tsib.futureyard.main.horizontalrecycler.ArRecyclerAdapter
+import kotlinx.android.synthetic.main.imgboard.*
 import java.util.ArrayList
+import java.util.function.Consumer
 
 class CameraFragment : Fragment() {
 
@@ -32,9 +41,15 @@ class CameraFragment : Fragment() {
     private lateinit var btnTakePhoto: MaterialButton
     private lateinit var arRecycler: RecyclerView
 
+    private lateinit var viewRenderableList: ArrayList<ViewRenderable>
+
+    var selected: Int = 0
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         Log.d(TAG, "$CAMERA onCreateView()")
+
         // получаем корневой элемент фрагмента
         rootview = inflater.inflate(R.layout.fragment_camera, container, false)
         return rootview
@@ -42,50 +57,136 @@ class CameraFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         Log.d(TAG, "$CAMERA onViewCreated()")
+
         initFields() // инициализируем views
+        viewRenderableList = generateViewRenderableList()
         initListeners() // ставим слушатели событий на кнопку фото и ar поверхность
     }
 
     private fun initFields() {
+
         Log.d(TAG, "$CAMERA initFields()")
+
+        // по умолчанию выбран 1 элемент
+        selected = 0
+
+        // находим views
         btnTakePhoto = rootview.findViewById(R.id.btn_take_photo)
         arFragment = childFragmentManager.
         findFragmentById(R.id.scene_form_fragment) as ArFragment
         arRecycler = rootview.findViewById(R.id.ar_fragment_recycler)
-        arRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        arRecycler.adapter = ArRecyclerAdapter(generateList())
+
+        // задаём свойства recycleview
+        arRecycler.layoutManager = LinearLayoutManager(
+            activity, LinearLayoutManager.HORIZONTAL, false)
+        arRecycler.adapter = activity?.let { ArRecyclerAdapter(generateСardList(), this) }
     }
 
-    private fun generateList(): ArrayList<ArCard> {
+    private fun initListeners() {
+
+        Log.d(TAG, "$CAMERA initListeners()")
+
+        // по клику на ar поверхность устанавливаем модель
+        arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
+            placeModel(hitResult)
+        }
+
+        // по клику на кнопку фото делаем захват экрана
+        btnTakePhoto.setOnClickListener {
+            takePhoto()
+        }
+
+    }
+
+
+    // генерируем массив карточек для recycleview
+    private fun generateСardList(): ArrayList<ArCard> {
+
+        Log.d(TAG, "$CAMERA generateСardList()")
+
         var list: ArrayList<ArCard> = ArrayList()
         for(i in 0 until AR_RECYCLE_SIZE){
-            list.add(ArCard(photos[i], titles[i], subtitles[i], descriptions[i]))
+            list.add(
+                ArCard(
+                    icons[i],
+                    titles[i],
+                    subtitles[i],
+                    descriptions[i]
+                )
+            )
         }
         return list
     }
 
-    private fun initListeners() {
-        Log.d(TAG, "$CAMERA initListeners()")
-        btnTakePhoto.setOnClickListener {
-            takePhoto() // по клику на кнопку фото делаем захват экрана
+    private fun generateViewRenderableList(): ArrayList<ViewRenderable>{
+
+        Log.d(TAG, "$CAMERA generateViewRenderableList()")
+
+        var list = ArrayList<ViewRenderable>()
+
+        for(i in 0 until AR_RECYCLE_SIZE) {
+            ViewRenderable.builder()
+                .setView(activity, imageCard)
+                .build()
+                .thenAccept(
+                    Consumer { renderable: ViewRenderable ->
+                        Log.d(TAG, "$CAMERA renderable $renderable")
+                        list[i] = renderable
+                        val imageView: ImageView = renderable.view as ImageView
+                        imageView.setImageResource(images[i])
+                    }
+                )
+//            (ViewRenderable.builder()
+//                .setView(context, R.layout.imgboard)
+//                .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+//                .setSizer(FixedHeightViewSizer(1.7f)))
+//                .build()
+//                .thenAccept (
+//                    Consumer { renderable: ViewRenderable ->
+//                        viewRenderableList[i] = renderable
+//                        val imageView: ImageView = renderable.view as ImageView
+//                        imageView.setImageResource(images[i])
+//                    }
+//                )
         }
-        arFragment.setOnTapArPlaneListener {
-                hitResult, _, _ ->
-            placeModel(hitResult) // по клику на ar поверхность устанавливаем модель
-        }
+        Log.d(TAG, "$CAMERA $list")
+        return list
     }
 
-    private fun takePhoto() {
-        Log.d(TAG, "$CAMERA takePhoto()")
-    }
 
+    // устанавливаем модель на ar поверхность
     private fun placeModel(hitResult: HitResult){
-        Log.d(TAG, "$CAMERA placeModel()")
+
+        Log.d(TAG, "$CAMERA placeModel($selected)")
+
         val anchor = hitResult.createAnchor()
         val anchorNode = AnchorNode(anchor)
         anchorNode.setParent(arFragment.arSceneView.scene)
-        //createModel(anchorNode, selected)
+        createModel(anchorNode, selected)
+    }
+
+    private fun createModel(anchorNode: AnchorNode, selected: Int) {
+
+        Log.d(TAG, "$CAMERA createModel()")
+
+        val model = TransformableNode(arFragment.transformationSystem)
+        model.localPosition = Vector3(0f, anchorNode.localPosition.y + 0f, 0f)
+        model.setParent(anchorNode)
+        model.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+            anchorNode.setParent(null)
+        }
+        model.renderable = viewRenderableList[selected]
+        model.select()
+
+    }
+
+    // делаем захват экрана
+    private fun takePhoto() {
+
+        Log.d(TAG, "$CAMERA takePhoto()")
+
     }
 
 

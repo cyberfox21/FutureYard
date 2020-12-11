@@ -1,19 +1,28 @@
 package com.tsib.futureyard
 
-import android.graphics.drawable.Drawable
-
 object Constants {
     const val TAG = "CHECKER"
     const val CAMERA = "CameraFragment:"
+    const val LOGIN = "LoginFragment:"
+    const val REGISTER = "RegisterFragment:"
     const val AR_RECYCLE_SIZE = 6
 
-    val photos: Array<Int> = arrayOf(
+    val icons: Array<Int> = arrayOf(
         R.drawable.ic_trash,
         R.drawable.ic_light,
         R.drawable.ic_bench,
         R.drawable.ic_flowerbed,
         R.drawable.ic_bush,
         R.drawable.ic_kianu
+    )
+
+    val images: Array<Int> = arrayOf(
+        R.drawable.trash,
+        R.drawable.light,
+        R.drawable.bench,
+        R.drawable.flowerbed,
+        R.drawable.bush,
+        R.drawable.kianu
     )
 
     val titles = arrayOf(
@@ -24,14 +33,16 @@ object Constants {
         "Куст",
         "Киану Ривз"
     )
+
     val subtitles = arrayOf(
-        "пластик",
-        "железо",
-        "дерево",
-        "камни",
-        "дерево",
-        "брутальность"
+        "ПЛАСТИК",
+        "ЖЕЛЕЗО",
+        "ДЕРЕВО",
+        "КАМНИ",
+        "ДЕРЕВО",
+        "БРУТАЛЬНОТЬ"
     )
+
     val descriptions = arrayOf(
         "Cпециализированная ёмкость, служащая для сбора бытовых или строительных отходов. ",
         "Cтационарный источник света. Прибор для освещения отдельных участков пространства в темное время суток.",
