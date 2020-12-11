@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,7 @@ import com.tsib.futureyard.main.horizontalrecycler.ArRecyclerAdapter
 import kotlinx.android.synthetic.main.imgboard.*
 import java.util.ArrayList
 import java.util.function.Consumer
+import com.google.ar.core.Config as Config
 
 class CameraFragment : Fragment() {
 
@@ -41,7 +43,9 @@ class CameraFragment : Fragment() {
     private lateinit var btnTakePhoto: MaterialButton
     private lateinit var arRecycler: RecyclerView
 
-    private lateinit var viewRenderableList: ArrayList<ViewRenderable>
+    var viewRenderableList: MutableList<ViewRenderable>? = null
+
+    var fonar: ViewRenderable? = null
 
     var selected: Int = 0
 
@@ -61,7 +65,6 @@ class CameraFragment : Fragment() {
         Log.d(TAG, "$CAMERA onViewCreated()")
 
         initFields() // инициализируем views
-        viewRenderableList = generateViewRenderableList()
         initListeners() // ставим слушатели событий на кнопку фото и ar поверхность
     }
 
@@ -78,10 +81,17 @@ class CameraFragment : Fragment() {
         findFragmentById(R.id.scene_form_fragment) as ArFragment
         arRecycler = rootview.findViewById(R.id.ar_fragment_recycler)
 
-        // задаём свойства recycleview
+        // задаём свойства recyclerview
         arRecycler.layoutManager = LinearLayoutManager(
             activity, LinearLayoutManager.HORIZONTAL, false)
         arRecycler.adapter = activity?.let { ArRecyclerAdapter(generateСardList(), this) }
+
+        for(i in 0 until AR_RECYCLE_SIZE){
+           // generateViewRenderableList()
+        }
+        //viewRenderableList = generateViewRenderableList()
+        //Config().updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
+
     }
 
     private fun initListeners() {
@@ -101,7 +111,7 @@ class CameraFragment : Fragment() {
     }
 
 
-    // генерируем массив карточек для recycleview
+    // генерируем массив карточек для recyclerview
     private fun generateСardList(): ArrayList<ArCard> {
 
         Log.d(TAG, "$CAMERA generateСardList()")
@@ -120,24 +130,34 @@ class CameraFragment : Fragment() {
         return list
     }
 
-    private fun generateViewRenderableList(): ArrayList<ViewRenderable>{
+    private fun generateViewRenderableList(image: Int) : ViewRenderable? {
 
         Log.d(TAG, "$CAMERA generateViewRenderableList()")
 
-        var list = ArrayList<ViewRenderable>()
+        var list = ArrayList<ViewRenderable>(AR_RECYCLE_SIZE)
 
-        for(i in 0 until AR_RECYCLE_SIZE) {
-            ViewRenderable.builder()
-                .setView(activity, imageCard)
-                .build()
-                .thenAccept(
-                    Consumer { renderable: ViewRenderable ->
-                        Log.d(TAG, "$CAMERA renderable $renderable")
-                        list[i] = renderable
-                        val imageView: ImageView = renderable.view as ImageView
-                        imageView.setImageResource(images[i])
-                    }
-                )
+       // var fonar: ViewRenderable
+
+
+            var model: ViewRenderable? = null
+        ViewRenderable.builder()
+            .setView(activity, R.layout.imgboard)
+            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+            .setSizer(FixedHeightViewSizer(1.7f))
+            .build()
+            .thenAccept(
+                Consumer { renderable: ViewRenderable ->
+                    model = renderable as ViewRenderable
+                    val imageView: ImageView = renderable.view as ImageView
+                    imageView.setImageResource(image)
+                }
+            )
+//                    Consumer { renderable: ViewRenderable ->
+//                        Log.d(TAG, "$CAMERA renderable $renderable")
+//                        list.add(renderable)
+//                        val imageView: ImageView = renderable.view as ImageView
+//                        imageView.setImageResource(images[i])
+
 //            (ViewRenderable.builder()
 //                .setView(context, R.layout.imgboard)
 //                .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
@@ -150,9 +170,10 @@ class CameraFragment : Fragment() {
 //                        imageView.setImageResource(images[i])
 //                    }
 //                )
-        }
-        Log.d(TAG, "$CAMERA $list")
-        return list
+//        }
+//        Log.d(TAG, "$CAMERA $list")
+//        return list
+        return model
     }
 
 
@@ -171,13 +192,28 @@ class CameraFragment : Fragment() {
 
         Log.d(TAG, "$CAMERA createModel()")
 
+        var view: ViewRenderable? = null
+
+        ViewRenderable.builder()
+            .setView(activity, R.layout.imgboard)
+            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+            .setSizer(FixedHeightViewSizer(10f))
+            .build()
+            .thenAccept(
+                Consumer { renderable: ViewRenderable ->
+                    view = renderable as ViewRenderable
+                    val imageView: ImageView = renderable.view as ImageView
+                    imageView.setImageResource(images[selected])
+                }
+            )
+
         val model = TransformableNode(arFragment.transformationSystem)
-        model.localPosition = Vector3(0f, anchorNode.localPosition.y + 0f, 0f)
+        model.localPosition = Vector3(0f, anchorNode.localPosition.y + 0.5f, 0f)
         model.setParent(anchorNode)
         model.setOnTapListener { _: HitTestResult, _: MotionEvent ->
             anchorNode.setParent(null)
         }
-        model.renderable = viewRenderableList[selected]
+        model.renderable = view
         model.select()
 
     }

@@ -16,7 +16,7 @@
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/spring_dots_indicator"
-        android:layout_width="97dp"
+        android:layout_width="wrap_content"
         android:layout_height="12dp"
         android:layout_marginBottom="10dp"
         app:dampingRatio="0.5"
