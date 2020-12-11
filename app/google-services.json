@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "47865108025",
+    "firebase_url": "https://futureyard-83dfc-default-rtdb.firebaseio.com",
+    "project_id": "futureyard-83dfc",
+    "storage_bucket": "futureyard-83dfc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47865108025:android:e9feb27328a494f3275fe8",
+        "android_client_info": {
+          "package_name": "com.tsib.futureyard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "47865108025-djkf6qnddjh2c3ta324j3f5564dcoq6s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tsib.futureyard",
+            "certificate_hash": "14196579f527a4e319de8071624def4921362677"
+          }
+        },
+        {
+          "client_id": "47865108025-0nb5prv6sgkpqo2v0let4sjvcl85r7i0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4IVC_HH-A8hxKRZ3QXatUmt-5JTCEihA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "47865108025-0nb5prv6sgkpqo2v0let4sjvcl85r7i0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
