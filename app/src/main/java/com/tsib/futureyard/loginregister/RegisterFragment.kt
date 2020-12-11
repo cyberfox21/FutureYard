@@ -158,7 +158,7 @@ class RegisterFragment : Fragment() {
 
     private fun saveUserToDatabase(fio: String, email: String, adress: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().reference.child("users")
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
         val user = User(fio, email, adress, uid)
         ref.setValue(user)
             .addOnSuccessListener {

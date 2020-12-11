@@ -7,7 +7,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_password"
+        android:id="@+id/inputlayout_password"
         style="@style/edit_text_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,6 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/divider3">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
             style="@style/edit_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -27,7 +28,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_login"
+        android:id="@+id/inputlayout_login"
         style="@style/edit_text_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,6 +41,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_login"
             style="@style/edit_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -89,7 +91,7 @@
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_cyberyard"
-        app:layout_constraintBottom_toTopOf="@+id/et_login"
+        app:layout_constraintBottom_toTopOf="@+id/inputlayout_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
