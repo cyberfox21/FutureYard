@@ -64,6 +64,9 @@ class LoginFragment : Fragment() {
     private fun enterUser() {
 
         Log.d(Constants.TAG, "${Constants.LOGIN} loginUser()")
+
+
+
     }
 
     private fun toRegisterPage() {

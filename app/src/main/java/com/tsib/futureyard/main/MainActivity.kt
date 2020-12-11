@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(DashBoardFragment())
         viewPager.adapter = adapter
         viewPager.currentItem = 1
-        dotsIndicator.setViewPager(viewPager)
-        viewPager.adapter?.registerDataSetObserver(dotsIndicator.dataSetObserver)
+        spring_dots_indicator.setViewPager(viewPager)
+        //viewPager.adapter?.registerDataSetObserver(dotsIndicator.dataSetObserver)
     }
 }
