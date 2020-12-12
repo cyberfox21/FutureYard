@@ -1,12 +1,13 @@
 package com.tsib.futureyard.main
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
+import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,8 +30,8 @@ import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
 import com.tsib.futureyard.Constants.AR_RECYCLE_SIZE
 import com.tsib.futureyard.Constants.CAMERA
 import com.tsib.futureyard.Constants.TAG
@@ -44,7 +46,6 @@ import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.android.synthetic.main.fragment_dash_board.*
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 import java.util.function.Consumer
 
@@ -231,11 +232,10 @@ class CameraFragment : Fragment() {
 
         val bitmap = takePhoto()
 
-        if(bitmap == null){
-            Log.d(TAG, "bitmap is null")
-        }
+        val uri = activity?.let { getImageUri(it, bitmap) }
 
-        screenshot.setImageBitmap(bitmap)
+
+        uri?.let { uploadImageToFirebaseStorage(it) }
 
         val now = Date()
         DateFormat.format("yyyy-MM-dd_hh:mm:ss", now)
@@ -282,6 +282,55 @@ class CameraFragment : Fragment() {
 //        }
     }
 
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            inContext.contentResolver,
+            inImage,
+            "Title",
+            null
+        )
+        return Uri.parse(path)
+    }
+
+    private fun uploadImageToFirebaseStorage(selectedPhoto: Uri) {
+        val filename = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/notes/$filename")
+        ref.putFile(selectedPhoto!!)
+            .addOnSuccessListener {
+                Log.d(
+                    "CHECKER",
+                    "AddNoteActivity: Successfully uploaded image: ${it.metadata?.path}"
+                )
+
+                ref.downloadUrl.addOnSuccessListener {
+                    val selectedPhotoString = it.toString()
+                    Log.d("CHECKER", "AddNoteActivity: File location: $selectedPhotoString")
+                    pushFile(selectedPhotoString)
+                }
+            }
+            .addOnFailureListener {
+                Log.d("CHECKER", "AddNoteActivity: Failed to upload image.")
+                Toast.makeText(
+                    activity,
+                    "Failed to upload image.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    private fun pushFile(photo: String) {
+        val ref = FirebaseDatabase.getInstance().getReference("/photos/${FirebaseAuth.getInstance().currentUser?.uid}")
+
+        val path = ref.push().key.toString()
+
+        ref.child(path).setValue(
+            photo
+        )
+
+    }
+
     private fun openScreenshot(imageFile: File) {
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW
@@ -294,7 +343,7 @@ class CameraFragment : Fragment() {
         val view: View = arFragment.arSceneView
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        val bgDrawable = view.background
+        val bgDrawable = view
         if (bgDrawable != null) {
             bgDrawable.draw(canvas)
         } else {
