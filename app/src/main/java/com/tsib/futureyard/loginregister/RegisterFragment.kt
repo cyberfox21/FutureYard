@@ -142,7 +142,7 @@ class RegisterFragment : Fragment() {
                             Log.d("CHECKER", "RegistrationActivity: Email: $email")
                             Log.d("CHECKER", "RegistrationActivity: Password: $pwd")
 
-                            saveUserToDatabase(fio, email, adress)
+                            saveUserToDatabase(fio, email, adress, pwd)
 
                             startActivity(
                                 Intent(
@@ -156,10 +156,10 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun saveUserToDatabase(fio: String, email: String, adress: String) {
+    private fun saveUserToDatabase(fio: String, email: String, pwd: String, adress: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-        val user = User(fio, email, adress, uid)
+        val user = User(fio, email, adress, pwd, uid)
         ref.setValue(user)
             .addOnSuccessListener {
                 Log.d("CHECKER", "RegistrationActivity: User saved in Firebase.")

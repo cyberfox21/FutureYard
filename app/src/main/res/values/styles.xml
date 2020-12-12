@@ -2,11 +2,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar.Bridge">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">#52F1FD</item>
         <item name="colorPrimaryDark">#000</item>
         <item name="android:colorButtonNormal">#F2EC00</item>
         <item name="shapeAppearanceSmallComponent">@style/shape_appearance_1</item>
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">#52F1FD</item>
         <item name="android:navigationBarColor">#121212</item>
         <item name="colorControlActivated">#52F1FD</item>
     </style>
@@ -40,6 +40,7 @@
         <item name="hintTextColor">#52F1FD</item>
         <item name="colorControlActivated">#52F1FD</item>
         <item name="colorControlHighlight">#52F1FD</item>
+        <item name="colorControlNormal">#52F1FD</item>
 
 
     </style>
@@ -59,6 +60,22 @@
         <item name="cornerSizeTopRight">4dp</item>
         <item name="cornerSizeTopLeft">2dp</item>
         <item name="cornerSizeBottomRight">16dp</item>
+        <item name="cornerSizeBottomLeft">2dp</item>
+    </style>
+
+
+    <style name="shape_appearance_3" parent="@style/ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomLeft">16dp</item>
+    </style>
+
+
+    <style name="shape_appearance_4" parent="@style/ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">2dp</item>
         <item name="cornerSizeBottomLeft">2dp</item>
     </style>
 

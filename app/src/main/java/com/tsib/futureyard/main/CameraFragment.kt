@@ -1,6 +1,13 @@
 package com.tsib.futureyard.main
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -20,21 +27,27 @@ import com.google.ar.sceneform.rendering.FixedHeightViewSizer
 import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import com.tsib.futureyard.Constants.AR_RECYCLE_SIZE
 import com.tsib.futureyard.Constants.CAMERA
 import com.tsib.futureyard.Constants.TAG
 import com.tsib.futureyard.Constants.descriptions
 import com.tsib.futureyard.Constants.icons
-import com.tsib.futureyard.Constants.images
 import com.tsib.futureyard.Constants.subtitles
 import com.tsib.futureyard.Constants.titles
 import com.tsib.futureyard.R
 import com.tsib.futureyard.main.horizontalrecycler.ArCard
 import com.tsib.futureyard.main.horizontalrecycler.ArRecyclerAdapter
-import kotlinx.android.synthetic.main.imgboard.*
-import java.util.ArrayList
+import kotlinx.android.synthetic.main.fragment_camera.*
+import kotlinx.android.synthetic.main.fragment_dash_board.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.util.*
 import java.util.function.Consumer
-import com.google.ar.core.Config as Config
+
 
 class CameraFragment : Fragment() {
 
@@ -52,8 +65,10 @@ class CameraFragment : Fragment() {
 
     var selected: Int = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         Log.d(TAG, "$CAMERA onCreateView()")
 
@@ -86,7 +101,8 @@ class CameraFragment : Fragment() {
 
         // задаём свойства recyclerview
         arRecycler.layoutManager = LinearLayoutManager(
-            activity, LinearLayoutManager.HORIZONTAL, false)
+            activity, LinearLayoutManager.HORIZONTAL, false
+        )
         arRecycler.adapter = activity?.let { ArRecyclerAdapter(generateСardList(), this) }
 
     }
@@ -102,7 +118,7 @@ class CameraFragment : Fragment() {
 
         // по клику на кнопку фото делаем захват экрана
         btnTakePhoto.setOnClickListener {
-            takePhoto()
+            sendPhoto()
         }
 
     }
@@ -209,10 +225,83 @@ class CameraFragment : Fragment() {
     }
 
     // делаем захват экрана
-    private fun takePhoto() {
+    private fun sendPhoto() {
 
         Log.d(TAG, "$CAMERA takePhoto()")
 
+        val bitmap = takePhoto()
+
+        if(bitmap == null){
+            Log.d(TAG, "bitmap is null")
+        }
+
+        screenshot.setImageBitmap(bitmap)
+
+        val now = Date()
+        DateFormat.format("yyyy-MM-dd_hh:mm:ss", now)
+
+        val storage = FirebaseStorage.getInstance()
+        val storageRef = storage.getReferenceFromUrl("gs://futureyard-83dfc.appspot.com")
+        // Create a reference to 'images/mountains.jpg'
+        val photoRef = storageRef.child("${FirebaseAuth.getInstance().currentUser?.uid}/$now.jpg")
+//
+//        try {
+//            // image naming and path  to include sd card appending name you choose for file
+//            val mPath: String =
+//                Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg"
+//
+//            // create bitmap screen capture
+//            val view: View = arFragment.arSceneView
+//            view.isDrawingCacheEnabled = true
+//            val bitmap = Bitmap.createBitmap(
+//                view.width, view.height,
+//                Bitmap.Config.ARGB_8888
+//            )
+//            view.isDrawingCacheEnabled = false
+//            val imageFile = File(mPath)
+//            val outputStream = FileOutputStream(imageFile)
+//            val quality = 100
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+//            outputStream.flush()
+//            outputStream.close()
+//            val baos = ByteArrayOutputStream()
+//            val data: ByteArray = baos.toByteArray()
+//
+//            val uploadTask: UploadTask = photoRef.putBytes(data)
+//            uploadTask.addOnFailureListener {
+//                    Log.d(TAG, "fail download")
+//                }
+//                .addOnSuccessListener { taskSnapshot -> // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+//                    val downloadUrl: String = taskSnapshot.metadata!!.path
+//                    Log.d(TAG, "downloadUrl: $downloadUrl")
+//                }
+//            //openScreenshot(imageFile)
+//        } catch (e: Throwable) {
+//            // Several error may come out with file handling or DOM
+//            e.printStackTrace()
+//        }
+    }
+
+    private fun openScreenshot(imageFile: File) {
+        val intent = Intent()
+        intent.action = Intent.ACTION_VIEW
+        val uri: Uri = Uri.fromFile(imageFile)
+        intent.setDataAndType(uri, "image/*")
+        startActivity(intent)
+    }
+
+    private fun takePhoto(): Bitmap {
+        val view: View = arFragment.arSceneView
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val bgDrawable = view.background
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas)
+        } else {
+            canvas.drawColor(Color.WHITE)
+        }
+        view.draw(canvas)
+        return bitmap
     }
 
 
