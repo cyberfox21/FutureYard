@@ -3,8 +3,6 @@ package com.tsib.futureyard.main
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -16,12 +14,10 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.ar.core.HitResult
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.ArSceneView
@@ -42,13 +38,11 @@ import com.tsib.futureyard.Constants.icons
 import com.tsib.futureyard.Constants.subtitles
 import com.tsib.futureyard.Constants.titles
 import com.tsib.futureyard.R
+import com.tsib.futureyard.main.gridrecyclerview.PhotoCard
 import com.tsib.futureyard.main.horizontalrecycler.ArCard
 import com.tsib.futureyard.main.horizontalrecycler.ArRecyclerAdapter
-import kotlinx.android.synthetic.main.fragment_camera.*
-import kotlinx.android.synthetic.main.fragment_dash_board.*
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.IOException
 import java.util.*
 import java.util.function.Consumer
 
@@ -245,44 +239,8 @@ class CameraFragment : Fragment() {
 
         val storage = FirebaseStorage.getInstance()
         val storageRef = storage.getReferenceFromUrl("gs://futureyard-83dfc.appspot.com")
-        // Create a reference to 'images/mountains.jpg'
+
         val photoRef = storageRef.child("${FirebaseAuth.getInstance().currentUser?.uid}/$now.jpg")
-//
-//        try {
-//            // image naming and path  to include sd card appending name you choose for file
-//            val mPath: String =
-//                Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg"
-//
-//            // create bitmap screen capture
-//            val view: View = arFragment.arSceneView
-//            view.isDrawingCacheEnabled = true
-//            val bitmap = Bitmap.createBitmap(
-//                view.width, view.height,
-//                Bitmap.Config.ARGB_8888
-//            )
-//            view.isDrawingCacheEnabled = false
-//            val imageFile = File(mPath)
-//            val outputStream = FileOutputStream(imageFile)
-//            val quality = 100
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-//            outputStream.flush()
-//            outputStream.close()
-//            val baos = ByteArrayOutputStream()
-//            val data: ByteArray = baos.toByteArray()
-//
-//            val uploadTask: UploadTask = photoRef.putBytes(data)
-//            uploadTask.addOnFailureListener {
-//                    Log.d(TAG, "fail download")
-//                }
-//                .addOnSuccessListener { taskSnapshot -> // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-//                    val downloadUrl: String = taskSnapshot.metadata!!.path
-//                    Log.d(TAG, "downloadUrl: $downloadUrl")
-//                }
-//            //openScreenshot(imageFile)
-//        } catch (e: Throwable) {
-//            // Several error may come out with file handling or DOM
-//            e.printStackTrace()
-//        }
     }
 
     fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
@@ -299,7 +257,7 @@ class CameraFragment : Fragment() {
 
     private fun uploadImageToFirebaseStorage(selectedPhoto: Uri) {
         val filename = UUID.randomUUID().toString()
-        val ref = FirebaseStorage.getInstance().getReference("/notes/$filename")
+        val ref = FirebaseStorage.getInstance().getReference("/photos/$filename")
         ref.putFile(selectedPhoto!!)
             .addOnSuccessListener {
                 Log.d(
@@ -310,7 +268,7 @@ class CameraFragment : Fragment() {
                 ref.downloadUrl.addOnSuccessListener {
                     val selectedPhotoString = it.toString()
                     Log.d("CHECKER", "AddNoteActivity: File location: $selectedPhotoString")
-                    pushFile(selectedPhotoString)
+                    pushFile(PhotoCard(selectedPhotoString))
                 }
             }
             .addOnFailureListener {
@@ -323,7 +281,7 @@ class CameraFragment : Fragment() {
             }
     }
 
-    private fun pushFile(photo: String) {
+    private fun pushFile(photo: PhotoCard) {
         val ref = FirebaseDatabase.getInstance().getReference("/photos/${FirebaseAuth.getInstance().currentUser?.uid}")
 
         val path = ref.push().key.toString()
@@ -363,14 +321,6 @@ class CameraFragment : Fragment() {
 
         )
 
-//        val canvas = Canvas(bitmap)
-//        val bgDrawable = view
-//        if (bgDrawable != null) {
-//            bgDrawable.draw(canvas)
-//        } else {
-//            canvas.drawColor(Color.WHITE)
-//        }
-//        view.draw(canvas)
         return bitmap
     }
 

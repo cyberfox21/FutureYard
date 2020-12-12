@@ -5,12 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".main.DashBoardFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/grid_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="DASHBOARD FRAGMENT" />
-
-
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
