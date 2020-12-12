@@ -2,13 +2,16 @@ package com.tsib.futureyard.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.make.dots.dotsindicator.DotsIndicator
+import android.util.Log
 import com.tsib.futureyard.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d(Constants.TAG, "MainActivity: onCreate()")
+
         setContentView(R.layout.activity_main)
 
         val adapter =

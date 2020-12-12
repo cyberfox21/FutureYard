@@ -15,6 +15,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.tsib.futureyard.Constants
+import com.tsib.futureyard.Constants.REGISTER
+import com.tsib.futureyard.Constants.TAG
 import com.tsib.futureyard.R
 import com.tsib.futureyard.main.MainActivity
 
@@ -34,7 +36,7 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-        Log.d(Constants.TAG, "${Constants.REGISTER} onCreateView()")
+        Log.d(TAG, "$REGISTER onCreateView()")
 
         rootview = inflater.inflate(R.layout.fragment_register, container, false)
         return rootview
@@ -43,7 +45,7 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d(Constants.TAG, "${Constants.REGISTER} onViewCreated()")
+        Log.d(TAG, "$REGISTER onViewCreated()")
 
         initViews()
         initListeners()
@@ -52,7 +54,7 @@ class RegisterFragment : Fragment() {
 
     private fun initViews() {
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} initViews()")
+        Log.d(TAG, "$REGISTER initViews()")
 
         et_fio = rootview.findViewById(R.id.register_fio)
         et_email = rootview.findViewById(R.id.register_email)
@@ -64,7 +66,7 @@ class RegisterFragment : Fragment() {
 
     private fun initListeners() {
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} initListeners()")
+        Log.d(TAG, "$REGISTER initListeners()")
 
         btnRegister.setOnClickListener {
             registerUser()
@@ -75,46 +77,53 @@ class RegisterFragment : Fragment() {
     }
 
     private fun registerUser() {
+
+        Log.d(TAG, "$REGISTER registerUser()")
+
         val fio = et_fio.text.toString()
         val email = et_email.text.toString()
         val pwd = et_password.text.toString()
         val adress = et_adress.text.toString()
+
         when {
+
             fio.isEmpty() -> {
-                Log.d("CHECKER", "RegistrationActivity: Please enter email.")
-                et_fio.error = "Please enter email."
+                Log.d(TAG, "$REGISTER Please enter name.")
+                et_fio.error = "Please enter name."
                 et_fio.requestFocus()
             }
+
             email.isEmpty() -> {
-                Log.d("CHECKER", "RegistrationActivity: Please enter email.")
+                Log.d(TAG, "$REGISTER  Please enter email.")
                 et_email.error = "Please enter email."
                 et_email.requestFocus()
             }
+
             pwd.isEmpty() -> {
-                Log.d("CHECKER", "RegistrationActivity: Please enter password.")
+                Log.d(TAG, "$REGISTER  Please enter password.")
                 et_email.error = "Please enter password."
                 et_email.requestFocus()
             }
+
             adress.isEmpty() -> {
-                Log.d("CHECKER", "RegistrationActivity: Please enter name.")
-                et_adress.error = "Please enter name."
+                Log.d(TAG, "$REGISTER  Please enter adress.")
+                et_adress.error = "Please enter adress."
                 et_adress.requestFocus()
             }
+
             pwd.length < 6 -> {
-                Log.d("CHECKER", "RegistrationActivity: Password must be at least 6 characters.")
+                Log.d(TAG, "$REGISTER  Password must be at least 6 characters.")
                 et_password.error = "Password must be at least 6 characters."
                 et_password.requestFocus()
             }
+
             !(email.isEmpty() && pwd.isEmpty() && fio.isEmpty() && adress.isEmpty()) -> {
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, pwd)
                     .addOnFailureListener {
                         Log.d(
-                            "CHECKER",
-                            "RegistrationActivity: Failed to create user. ${it.message}"
+                            TAG,
+                            "$REGISTER  Failed to create user. ${it.message}"
                         )
-                        Log.d("CHECKER", "RegistrationActivity: Name: $fio")
-                        Log.d("CHECKER", "RegistrationActivity: Email: $email")
-                        Log.d("CHECKER", "RegistrationActivity: Password: $pwd")
                         Toast.makeText(
                             activity,
                             "Failed to create user: ${it.message}",
@@ -123,10 +132,7 @@ class RegisterFragment : Fragment() {
                     }
                     .addOnCompleteListener {
                         if (!it.isSuccessful) {
-                            Log.d("CHECKER", "RegistrationActivity: Failed to create user.")
-                            Log.d("CHECKER", "RegistrationActivity: Name: $fio")
-                            Log.d("CHECKER", "RegistrationActivity: Email: $email")
-                            Log.d("CHECKER", "RegistrationActivity: Password: $pwd")
+                            Log.d(TAG, "$REGISTER  Failed to create user.")
                             Toast.makeText(
                                 activity,
                                 "Failed to create user.",
@@ -134,13 +140,10 @@ class RegisterFragment : Fragment() {
                             ).show()
                         } else { // else if successful
                             Log.d(
-                                "CHECKER",
-                                "RegistrationActivity: Successfully created user with uid: " +
+                                TAG,
+                                "$REGISTER  Successfully created user with uid: " +
                                         "${it.result?.user?.uid}"
                             )
-                            Log.d("CHECKER", "RegistrationActivity: Name: $fio")
-                            Log.d("CHECKER", "RegistrationActivity: Email: $email")
-                            Log.d("CHECKER", "RegistrationActivity: Password: $pwd")
 
                             saveUserToDatabase(fio, email, adress, pwd)
 
@@ -157,21 +160,24 @@ class RegisterFragment : Fragment() {
     }
 
     private fun saveUserToDatabase(fio: String, email: String, pwd: String, adress: String) {
+
+        Log.d(TAG, "$REGISTER saveUserToDatabase()")
+
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
         val user = User(fio, email, adress, pwd, uid)
         ref.setValue(user)
             .addOnSuccessListener {
-                Log.d("CHECKER", "RegistrationActivity: User saved in Firebase.")
+                Log.d(TAG, "$REGISTER  User saved in Firebase.")
             }
             .addOnFailureListener {
-                Log.d("CHECKER", "RegistrationActivity: Failed to save user in Firebase.")
+                Log.d(TAG, "$REGISTER  Failed to save user in Firebase.")
             }
     }
 
     private fun toEnterPage() {
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} toRegisterPage()")
+        Log.d(TAG, "$REGISTER toRegisterPage()")
 
         requireActivity().supportFragmentManager
             .beginTransaction()

@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_main_24"
-        app:title="AR-YARD"
+        app:title="@string/toolbar_theme"
         app:titleTextColor="#fcee09" />
 
     <com.google.android.material.button.MaterialButton
@@ -35,10 +35,11 @@
         android:backgroundTint="#fcee09"
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
-        android:paddingRight="10dp"
+        app:iconPadding="15dp"
+        android:paddingRight="20dp"
         android:paddingBottom="10dp"
         android:shadowColor="#fcee09"
-        android:text="  ф о т о  "
+        android:text="@string/photo"
         app:icon="@drawable/ic_baseline_add_a_photo_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,13 +54,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
-
-    <ImageView
-        android:id="@+id/screenshot"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ar_fragment_recycler" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

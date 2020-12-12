@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">FutureYard</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="toolbar_theme">FUTUREYARD</string>
+    <string name="FIO">ФИО</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="adress">Адрес</string>
+    <string name="enter">в о й т и</string>
+    <string name="register">р е г и с т р а ц и я</string>
+    <string name="change">и з м е н е н и т ь</string>
+    <string name="photo">ф о т о</string>
+    <string name="sure_deleting">Вы точно хотите удалить фотографию?</string>
 </resources>

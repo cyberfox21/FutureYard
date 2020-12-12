@@ -14,6 +14,8 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.tsib.futureyard.Constants.DASHBOARD
+import com.tsib.futureyard.Constants.TAG
 import com.tsib.futureyard.R
 import com.tsib.futureyard.main.gridrecyclerview.GridViewAdapter
 import com.tsib.futureyard.main.gridrecyclerview.PhotoCard
@@ -31,12 +33,18 @@ class DashBoardFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+
+        Log.d(TAG, "$DASHBOARD onCreateView()")
+
         rootview = inflater.inflate(R.layout.fragment_dash_board, container, false)
         return rootview
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d(TAG, "$DASHBOARD onViewCreated()")
+
         resultList = ArrayList()
         val recyclerView: RecyclerView = rootview.findViewById(R.id.grid_recycler)
         val numberOfColumns = 2
@@ -47,36 +55,39 @@ class DashBoardFragment : Fragment() {
     }
 
     private fun updateList() {
-        Log.d("CHECKER", "updateList()")
+
+        Log.d(TAG, "updateList()")
+
         FirebaseDatabase.getInstance().reference.child("photos").child(FirebaseAuth.getInstance().uid.toString())
             .addChildEventListener(object : ChildEventListener {
+
                 override fun onCancelled(error: DatabaseError) {
-                    Log.d("CHECKER", "ChatActivity : ChildEventListener : onCancelled()")
+                    Log.d(TAG, "$DASHBOARD ChildEventListener : onCancelled()")
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                    Log.d("CHECKER", "ChatActivity : ChildEventListener : onChildMoved()")
+                    Log.d(TAG, "$DASHBOARD ChildEventListener : onChildMoved()")
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    Log.d("CHECKER", "ChatActivity : ChildEventListener : onChildChanged()")
+                    Log.d(TAG, "$DASHBOARD ChildEventListener : onChildChanged()")
                 }
 
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    resultList.add(snapshot.getValue(PhotoCard::class.java)!!)
 
+                    resultList.add(snapshot.getValue(PhotoCard::class.java)!!)
                     adapter.notifyDataSetChanged()
 
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
-                    var message = snapshot.getValue(PhotoCard::class.java)
-                    var index = message?.let { getItemIndex(it) }
+                    val message = snapshot.getValue(PhotoCard::class.java)
+                    val index = message?.let { getItemIndex(it) }
                     if (index != null) {
                         resultList.removeAt(index)
                     }
                     adapter.notifyDataSetChanged()
-                    Log.d("CHECKER", "ChatActivity : ChildEventListener : onChildRemoved()")
+                    Log.d(TAG, "$DASHBOARD ChildEventListener : onChildRemoved()")
                 }
             })
     }

@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_main_24"
-        app:title="AR-YARD"
+        app:title="@string/toolbar_theme"
         app:titleTextColor="#fcee09" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator

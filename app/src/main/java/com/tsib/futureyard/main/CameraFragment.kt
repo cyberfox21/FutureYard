@@ -1,14 +1,12 @@
 package com.tsib.futureyard.main
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.provider.MediaStore
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -42,7 +40,6 @@ import com.tsib.futureyard.main.gridrecyclerview.PhotoCard
 import com.tsib.futureyard.main.horizontalrecycler.ArCard
 import com.tsib.futureyard.main.horizontalrecycler.ArRecyclerAdapter
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.util.*
 import java.util.function.Consumer
 
@@ -79,6 +76,7 @@ class CameraFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d(TAG, "$CAMERA onViewCreated()")
+
         setupModels()
         initFields() // инициализируем views
         initListeners() // ставим слушатели событий на кнопку фото и ar поверхность
@@ -152,75 +150,7 @@ class CameraFragment : Fragment() {
         createModel(anchorNode, selected)
     }
 
-    private fun createModel(anchorNode: AnchorNode, selected: Int) {
 
-        Log.d(TAG, "$CAMERA createModel()")
-
-        when(selected){
-            0 -> {
-                val trash = TransformableNode(arFragment.transformationSystem)
-                trash.localPosition = Vector3(0f, 0f, 0f)
-                trash.setParent(anchorNode)
-                trash.setOnTapListener { _: HitTestResult, _: MotionEvent ->
-                    anchorNode.setParent(null)
-                }
-                trash.renderable = trashRenderable
-                trash.select()
-            }
-            1 -> {
-                val light = TransformableNode(arFragment.transformationSystem)
-                light.localPosition = Vector3(0f, 0f, 0f)
-                light.setParent(anchorNode)
-                light.setOnTapListener { _: HitTestResult, _: MotionEvent ->
-                    anchorNode.setParent(null)
-                }
-                light.renderable = lightRenderable
-                light.select()
-            }
-            2 -> {
-                val bench = TransformableNode(arFragment.transformationSystem)
-                bench.localPosition = Vector3(0f, 0f, 0f)
-                bench.setParent(anchorNode)
-                bench.setOnTapListener { _: HitTestResult, _: MotionEvent ->
-                    anchorNode.setParent(null)
-                }
-                bench.renderable = benchRenderable
-                bench.select()
-            }
-            3 -> {
-                val flowerbed = TransformableNode(arFragment.transformationSystem)
-                flowerbed.localPosition = Vector3(0f, 0f, 0f)
-                flowerbed.setParent(anchorNode)
-                flowerbed.setOnTapListener { _: HitTestResult, _: MotionEvent ->
-                    anchorNode.setParent(null)
-                }
-                flowerbed.renderable = flowerbedRenderable
-                flowerbed.select()
-            }
-            4 -> {
-                val bush = TransformableNode(arFragment.transformationSystem)
-                bush.localPosition = Vector3(0f, 0f, 0f)
-                bush.setParent(anchorNode)
-                bush.setOnTapListener { _: HitTestResult, _: MotionEvent ->
-                    anchorNode.setParent(null)
-                }
-                bush.renderable = bushRenderable
-                bush.select()
-            }
-            else -> {
-                val kianu = TransformableNode(arFragment.transformationSystem)
-                kianu.localPosition = Vector3(0f, 0f, 1.5f)
-                kianu.setParent(anchorNode)
-                kianu.setOnTapListener { _: HitTestResult, _: MotionEvent ->
-                    anchorNode.setParent(null)
-                }
-                kianu.renderable = kianuRenderable
-                kianu.select()
-            }
-
-        }
-
-    }
 
     // делаем захват экрана
     private fun sendPhoto() {
@@ -231,19 +161,11 @@ class CameraFragment : Fragment() {
 
         val uri = activity?.let { getImageUri(it, bitmap) }
 
-
         uri?.let { uploadImageToFirebaseStorage(it) }
 
-        val now = Date()
-        DateFormat.format("yyyy-MM-dd_hh:mm:ss", now)
-
-        val storage = FirebaseStorage.getInstance()
-        val storageRef = storage.getReferenceFromUrl("gs://futureyard-83dfc.appspot.com")
-
-        val photoRef = storageRef.child("${FirebaseAuth.getInstance().currentUser?.uid}/$now.jpg")
     }
 
-    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+    private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(
@@ -261,18 +183,18 @@ class CameraFragment : Fragment() {
         ref.putFile(selectedPhoto!!)
             .addOnSuccessListener {
                 Log.d(
-                    "CHECKER",
-                    "AddNoteActivity: Successfully uploaded image: ${it.metadata?.path}"
+                    TAG,
+                    "$CAMERA Successfully uploaded image: ${it.metadata?.path}"
                 )
 
                 ref.downloadUrl.addOnSuccessListener {
                     val selectedPhotoString = it.toString()
-                    Log.d("CHECKER", "AddNoteActivity: File location: $selectedPhotoString")
-                    pushFile(PhotoCard(selectedPhotoString))
+                    Log.d(TAG, "$CAMERA File location: $selectedPhotoString")
+                    pushFile(selectedPhotoString)
                 }
             }
             .addOnFailureListener {
-                Log.d("CHECKER", "AddNoteActivity: Failed to upload image.")
+                Log.d(TAG, "$CAMERA Failed to upload image.")
                 Toast.makeText(
                     activity,
                     "Failed to upload image.",
@@ -281,23 +203,18 @@ class CameraFragment : Fragment() {
             }
     }
 
-    private fun pushFile(photo: PhotoCard) {
+    private fun pushFile(photo: String) {
         val ref = FirebaseDatabase.getInstance().getReference("/photos/${FirebaseAuth.getInstance().currentUser?.uid}")
 
         val path = ref.push().key.toString()
 
         ref.child(path).setValue(
-            photo
+            PhotoCard(
+                photo,
+                path
+            )
         )
 
-    }
-
-    private fun openScreenshot(imageFile: File) {
-        val intent = Intent()
-        intent.action = Intent.ACTION_VIEW
-        val uri: Uri = Uri.fromFile(imageFile)
-        intent.setDataAndType(uri, "image/*")
-        startActivity(intent)
     }
 
     private fun takePhoto(): Bitmap {
@@ -323,7 +240,6 @@ class CameraFragment : Fragment() {
 
         return bitmap
     }
-
 
     private fun setupModels() {
 
@@ -404,6 +320,76 @@ class CameraFragment : Fragment() {
                     imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.kianu))
                 }
             )
+
+    }
+
+    private fun createModel(anchorNode: AnchorNode, selected: Int) {
+
+        Log.d(TAG, "$CAMERA createModel()")
+
+        when(selected){
+            0 -> {
+                val trash = TransformableNode(arFragment.transformationSystem)
+                trash.localPosition = Vector3(0f, 0f, 0f)
+                trash.setParent(anchorNode)
+                trash.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                trash.renderable = trashRenderable
+                trash.select()
+            }
+            1 -> {
+                val light = TransformableNode(arFragment.transformationSystem)
+                light.localPosition = Vector3(0f, 0f, 0f)
+                light.setParent(anchorNode)
+                light.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                light.renderable = lightRenderable
+                light.select()
+            }
+            2 -> {
+                val bench = TransformableNode(arFragment.transformationSystem)
+                bench.localPosition = Vector3(0f, 0f, 0f)
+                bench.setParent(anchorNode)
+                bench.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                bench.renderable = benchRenderable
+                bench.select()
+            }
+            3 -> {
+                val flowerbed = TransformableNode(arFragment.transformationSystem)
+                flowerbed.localPosition = Vector3(0f, 0f, 0f)
+                flowerbed.setParent(anchorNode)
+                flowerbed.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                flowerbed.renderable = flowerbedRenderable
+                flowerbed.select()
+            }
+            4 -> {
+                val bush = TransformableNode(arFragment.transformationSystem)
+                bush.localPosition = Vector3(0f, 0f, 0f)
+                bush.setParent(anchorNode)
+                bush.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                bush.renderable = bushRenderable
+                bush.select()
+            }
+            else -> {
+                val kianu = TransformableNode(arFragment.transformationSystem)
+                kianu.localPosition = Vector3(0f, 0f, 1.5f)
+                kianu.setParent(anchorNode)
+                kianu.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                kianu.renderable = kianuRenderable
+                kianu.select()
+            }
+
+        }
 
     }
 }

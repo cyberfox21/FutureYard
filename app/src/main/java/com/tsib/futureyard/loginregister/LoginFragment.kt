@@ -12,6 +12,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.tsib.futureyard.Constants
+import com.tsib.futureyard.Constants.LOGIN
+import com.tsib.futureyard.Constants.TAG
 import com.tsib.futureyard.R
 import com.tsib.futureyard.main.MainActivity
 
@@ -27,7 +29,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} onCreateView()")
+        Log.d(Constants.TAG, "$LOGIN onCreateView()")
 
         rootview = inflater.inflate(R.layout.fragment_login, container, false)
         return rootview
@@ -36,7 +38,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} onViewCreated()")
+        Log.d(Constants.TAG, "$LOGIN onViewCreated()")
 
         initViews()
         initListeners()
@@ -45,7 +47,7 @@ class LoginFragment : Fragment() {
 
     private fun initViews() {
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} initViews()")
+        Log.d(Constants.TAG, "$LOGIN initViews()")
 
         etLogin = rootview.findViewById(R.id.et_login)
         etPassword = rootview.findViewById(R.id.et_password)
@@ -55,7 +57,7 @@ class LoginFragment : Fragment() {
 
     private fun initListeners() {
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} initListeners()")
+        Log.d(Constants.TAG, "$LOGIN initListeners()")
 
         btnEnter.setOnClickListener {
             enterUser()
@@ -67,40 +69,50 @@ class LoginFragment : Fragment() {
 
     private fun enterUser() {
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} loginUser()")
+        Log.d(Constants.TAG, "${Constants.LOGIN} enterUser()")
 
         val login = etLogin.text.toString()
         val pwd = etPassword.text.toString()
+
         if (login.isEmpty()) {
-            Log.d("CHECKER", "LoginActivity: Please enter email.")
+            Log.d(TAG, "$LOGIN Please enter email.")
             etLogin.error = "Please enter email."
             etLogin.requestFocus()
-        } else if (pwd.isEmpty()) {
-            Log.d("CHECKER", "LoginActivity: Please enter password.")
+        }
+
+        else if (pwd.isEmpty()) {
+            Log.d(TAG, "$LOGIN Please enter password.")
             etPassword.error = "Please enter password."
             etPassword.requestFocus()
-        } else if (pwd.length < 6) {
-            Log.d("CHECKER", "LoginActivity: Password must be at least 6 characters.")
+        }
+
+        else if (pwd.length < 6) {
+            Log.d(TAG, "$LOGIN:Password must be at least 6 characters.")
             etLogin.error = "Password must be at least 6 characters."
             etLogin.requestFocus()
-        } else if (login.isEmpty() && pwd.isEmpty()) {
-            Log.d("CHECKER", "LoginActivity: Fields are empty!")
+        }
+
+        else if (login.isEmpty() && pwd.isEmpty()) {
+            Log.d(TAG, "$LOGIN Fields are empty!")
             Toast.makeText(activity, "Fields are empty!", Toast.LENGTH_SHORT).show()
-        } else if (!(login.isEmpty() && pwd.isEmpty())) {
+        }
+
+        else if (!(login.isEmpty() && pwd.isEmpty())) {
+
             FirebaseAuth.getInstance().signInWithEmailAndPassword(login, pwd)
                 .addOnFailureListener {
-                    Log.d("CHECKER", "LoginActivity: Failed: ${it.message}")
+                    Log.d(TAG, "$LOGIN Failed: ${it.message}")
                     Toast.makeText(activity, "Failed: ${it.message}", Toast.LENGTH_LONG).show()
                 }
                 .addOnCompleteListener {
                     if (!it.isSuccessful) {
-                        Log.d("CHECKER", "LoginActivity: Error occurred!")
+                        Log.d(TAG, "$LOGIN Error occurred!")
                         Toast.makeText(activity, "Error occurred!", Toast.LENGTH_SHORT).show()
                         return@addOnCompleteListener
                     }
                     Log.d(
-                        "CHECKER",
-                        "LoginActivity: User logged in successfully with uid: ${it.result?.user?.uid}"
+                        TAG,
+                        "$LOGIN User logged in successfully with uid: ${it.result?.user?.uid}"
                     )
                     startActivity(Intent(activity, MainActivity::class.java))
                 }
@@ -110,7 +122,7 @@ class LoginFragment : Fragment() {
 
     private fun toRegisterPage() {
 
-        Log.d(Constants.TAG, "${Constants.LOGIN} toRegisterPage()")
+        Log.d(TAG, "LOGIN toRegisterPage()")
 
         requireActivity().supportFragmentManager
             .beginTransaction()

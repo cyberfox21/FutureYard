@@ -3,8 +3,16 @@ package com.tsib.futureyard
 object Constants {
     const val TAG = "CHECKER"
     const val CAMERA = "CameraFragment:"
+    const val DASHBOARD = "DashboardFragment:"
+    const val PROFIL = "FrofileFragment:"
     const val LOGIN = "LoginFragment:"
     const val REGISTER = "RegisterFragment:"
+
+    const val GRIDVIEWADAPTER = "GridViewAdapter:"
+    const val ARRECYCLERADAPTER = "ArRecyclerAdapter:"
+
+
+
     const val AR_RECYCLE_SIZE = 6
 
     val icons: Array<Int> = arrayOf(
@@ -45,10 +53,10 @@ object Constants {
 
     val descriptions = arrayOf(
         "Cпециализированная ёмкость, служащая для сбора бытовых или строительных отходов. ",
-        "Cтационарный источник света. Прибор для освещения отдельных участков пространства в темное время суток.",
-        "Деревянное приспособление для сидения, размещаемое на открытом воздухе и достпуное каждому.",
-        "Часть цветника, обычно в виде какой - либо геометрической. фигуры, имеющая замкнутую форму.",
-        "Растение с древовидными ветвями, начинающимися почти от самой поверхности земли.",
+        "Источник света. Прибор для освещения пространства в темное время.",
+        "Деревянное приспособление для сидения, размещаемое доступное каждому.",
+        "Часть цветника, обычно в виде геометрической фигуры, имеющая замкнутую форму.",
+        "Растение с ветвями, начинающимися почти от самой поверхности земли.",
         "Неподражаемый Киану Ривз ждёт вас в удивительном мире киберпанка."
     )
 }

@@ -70,6 +70,7 @@
             android:text="Лучший фонарь в истории человечества, все бабушки района будут тусить рядом с ним"
             android:textColor="#292929"
             android:textSize="7dp"
+            android:paddingRight="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/card_image"
