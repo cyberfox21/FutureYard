@@ -167,11 +167,12 @@ class CameraFragment : Fragment() {
 
     private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
         val bytes = ByteArrayOutputStream()
+        val filename = UUID.randomUUID().toString()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(
             inContext.contentResolver,
             inImage,
-            "Title",
+            filename,
             null
         )
         return Uri.parse(path)
