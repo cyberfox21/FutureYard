@@ -7,22 +7,24 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.ar.core.HitResult
 import com.google.ar.sceneform.AnchorNode
+import com.google.ar.sceneform.ArSceneView
 import com.google.ar.sceneform.HitTestResult
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.FixedHeightViewSizer
@@ -46,6 +48,7 @@ import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.android.synthetic.main.fragment_dash_board.*
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
 import java.util.*
 import java.util.function.Consumer
 
@@ -340,16 +343,34 @@ class CameraFragment : Fragment() {
     }
 
     private fun takePhoto(): Bitmap {
-        val view: View = arFragment.arSceneView
+        val view: ArSceneView = arFragment.arSceneView
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val bgDrawable = view
-        if (bgDrawable != null) {
-            bgDrawable.draw(canvas)
-        } else {
-            canvas.drawColor(Color.WHITE)
-        }
-        view.draw(canvas)
+
+        val handlerThread = HandlerThread("PixelCopier")
+        handlerThread.start()
+
+        PixelCopy.request(
+           view, bitmap, {
+                copyResult ->
+                if (copyResult === PixelCopy.SUCCESS) {
+                    Log.d(TAG, "Pixel copy successfully")
+                } else {
+                    Log.d(TAG, "Pixel copy failed")
+                }
+                handlerThread.quitSafely()
+            },
+            Handler(handlerThread.looper)
+
+        )
+
+//        val canvas = Canvas(bitmap)
+//        val bgDrawable = view
+//        if (bgDrawable != null) {
+//            bgDrawable.draw(canvas)
+//        } else {
+//            canvas.drawColor(Color.WHITE)
+//        }
+//        view.draw(canvas)
         return bitmap
     }
 
