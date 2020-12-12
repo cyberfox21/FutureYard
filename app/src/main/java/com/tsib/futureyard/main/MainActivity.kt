@@ -19,6 +19,5 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         viewPager.currentItem = 1
         spring_dots_indicator.setViewPager(viewPager)
-        //viewPager.adapter?.registerDataSetObserver(dotsIndicator.dataSetObserver)
     }
 }

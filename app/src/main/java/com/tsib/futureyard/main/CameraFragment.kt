@@ -43,9 +43,12 @@ class CameraFragment : Fragment() {
     private lateinit var btnTakePhoto: MaterialButton
     private lateinit var arRecycler: RecyclerView
 
-    var viewRenderableList: MutableList<ViewRenderable>? = null
-
-    var fonar: ViewRenderable? = null
+    lateinit var trashRenderable: ViewRenderable
+    lateinit var lightRenderable: ViewRenderable
+    lateinit var benchRenderable: ViewRenderable
+    lateinit var flowerbedRenderable: ViewRenderable
+    lateinit var bushRenderable: ViewRenderable
+    lateinit var kianuRenderable: ViewRenderable
 
     var selected: Int = 0
 
@@ -63,7 +66,7 @@ class CameraFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d(TAG, "$CAMERA onViewCreated()")
-
+        setupModels()
         initFields() // инициализируем views
         initListeners() // ставим слушатели событий на кнопку фото и ar поверхность
     }
@@ -85,12 +88,6 @@ class CameraFragment : Fragment() {
         arRecycler.layoutManager = LinearLayoutManager(
             activity, LinearLayoutManager.HORIZONTAL, false)
         arRecycler.adapter = activity?.let { ArRecyclerAdapter(generateСardList(), this) }
-
-        for(i in 0 until AR_RECYCLE_SIZE){
-           // generateViewRenderableList()
-        }
-        //viewRenderableList = generateViewRenderableList()
-        //Config().updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
 
     }
 
@@ -130,53 +127,6 @@ class CameraFragment : Fragment() {
         return list
     }
 
-    private fun generateViewRenderableList(image: Int) : ViewRenderable? {
-
-        Log.d(TAG, "$CAMERA generateViewRenderableList()")
-
-        var list = ArrayList<ViewRenderable>(AR_RECYCLE_SIZE)
-
-       // var fonar: ViewRenderable
-
-
-            var model: ViewRenderable? = null
-        ViewRenderable.builder()
-            .setView(activity, R.layout.imgboard)
-            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
-            .setSizer(FixedHeightViewSizer(1.7f))
-            .build()
-            .thenAccept(
-                Consumer { renderable: ViewRenderable ->
-                    model = renderable as ViewRenderable
-                    val imageView: ImageView = renderable.view as ImageView
-                    imageView.setImageResource(image)
-                }
-            )
-//                    Consumer { renderable: ViewRenderable ->
-//                        Log.d(TAG, "$CAMERA renderable $renderable")
-//                        list.add(renderable)
-//                        val imageView: ImageView = renderable.view as ImageView
-//                        imageView.setImageResource(images[i])
-
-//            (ViewRenderable.builder()
-//                .setView(context, R.layout.imgboard)
-//                .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
-//                .setSizer(FixedHeightViewSizer(1.7f)))
-//                .build()
-//                .thenAccept (
-//                    Consumer { renderable: ViewRenderable ->
-//                        viewRenderableList[i] = renderable
-//                        val imageView: ImageView = renderable.view as ImageView
-//                        imageView.setImageResource(images[i])
-//                    }
-//                )
-//        }
-//        Log.d(TAG, "$CAMERA $list")
-//        return list
-        return model
-    }
-
-
     // устанавливаем модель на ar поверхность
     private fun placeModel(hitResult: HitResult){
 
@@ -192,29 +142,69 @@ class CameraFragment : Fragment() {
 
         Log.d(TAG, "$CAMERA createModel()")
 
-        var view: ViewRenderable? = null
-
-        ViewRenderable.builder()
-            .setView(activity, R.layout.imgboard)
-            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
-            .setSizer(FixedHeightViewSizer(10f))
-            .build()
-            .thenAccept(
-                Consumer { renderable: ViewRenderable ->
-                    view = renderable as ViewRenderable
-                    val imageView: ImageView = renderable.view as ImageView
-                    imageView.setImageResource(images[selected])
+        when(selected){
+            0 -> {
+                val trash = TransformableNode(arFragment.transformationSystem)
+                trash.localPosition = Vector3(0f, 0f, 0f)
+                trash.setParent(anchorNode)
+                trash.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
                 }
-            )
+                trash.renderable = trashRenderable
+                trash.select()
+            }
+            1 -> {
+                val light = TransformableNode(arFragment.transformationSystem)
+                light.localPosition = Vector3(0f, 0f, 0f)
+                light.setParent(anchorNode)
+                light.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                light.renderable = lightRenderable
+                light.select()
+            }
+            2 -> {
+                val bench = TransformableNode(arFragment.transformationSystem)
+                bench.localPosition = Vector3(0f, 0f, 0f)
+                bench.setParent(anchorNode)
+                bench.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                bench.renderable = benchRenderable
+                bench.select()
+            }
+            3 -> {
+                val flowerbed = TransformableNode(arFragment.transformationSystem)
+                flowerbed.localPosition = Vector3(0f, 0f, 0f)
+                flowerbed.setParent(anchorNode)
+                flowerbed.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                flowerbed.renderable = flowerbedRenderable
+                flowerbed.select()
+            }
+            4 -> {
+                val bush = TransformableNode(arFragment.transformationSystem)
+                bush.localPosition = Vector3(0f, 0f, 0f)
+                bush.setParent(anchorNode)
+                bush.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                bush.renderable = bushRenderable
+                bush.select()
+            }
+            else -> {
+                val kianu = TransformableNode(arFragment.transformationSystem)
+                kianu.localPosition = Vector3(0f, 0f, 1.5f)
+                kianu.setParent(anchorNode)
+                kianu.setOnTapListener { _: HitTestResult, _: MotionEvent ->
+                    anchorNode.setParent(null)
+                }
+                kianu.renderable = kianuRenderable
+                kianu.select()
+            }
 
-        val model = TransformableNode(arFragment.transformationSystem)
-        model.localPosition = Vector3(0f, anchorNode.localPosition.y + 0.5f, 0f)
-        model.setParent(anchorNode)
-        model.setOnTapListener { _: HitTestResult, _: MotionEvent ->
-            anchorNode.setParent(null)
         }
-        model.renderable = view
-        model.select()
 
     }
 
@@ -226,27 +216,85 @@ class CameraFragment : Fragment() {
     }
 
 
-//    inner class WritingArFragment : ArFragment() {
-//
-//        override fun getAdditionalPermissions(): Array<String?> {
-//            val additionalPermissions =
-//                super.getAdditionalPermissions()
-//            val permissionLength =
-//                additionalPermissions?.size ?: 0
-//            val permissions =
-//                arrayOfNulls<String>(permissionLength + 1)
-//
-//            permissions[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE
-//            if (permissionLength > 0) {
-//                System.arraycopy(
-//                    additionalPermissions,
-//                    0,
-//                    permissions,
-//                    1,
-//                    additionalPermissions!!.size
-//                )
-//            }
-//            return permissions
-//        }
-//    }
+    private fun setupModels() {
+
+        ViewRenderable.builder()
+            .setView(activity, R.layout.imgboard)
+            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+            .setSizer(FixedHeightViewSizer(1.7f))
+            .build()
+            .thenAccept(
+                Consumer { renderable: ViewRenderable ->
+                    trashRenderable = renderable
+                    val imageView: ImageView = renderable.view as ImageView
+                    imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.trash))
+                }
+            )
+
+        ViewRenderable.builder()
+            .setView(activity, R.layout.imgboard)
+            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+            .setSizer(FixedHeightViewSizer(1.7f))
+            .build()
+            .thenAccept(
+                Consumer { renderable: ViewRenderable ->
+                    lightRenderable = renderable
+                    val imageView: ImageView = renderable.view as ImageView
+                    imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.light))
+                }
+            )
+
+        ViewRenderable.builder()
+            .setView(activity, R.layout.imgboard)
+            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+            .setSizer(FixedHeightViewSizer(1.7f))
+            .build()
+            .thenAccept(
+                Consumer { renderable: ViewRenderable ->
+                    benchRenderable = renderable
+                    val imageView: ImageView = renderable.view as ImageView
+                    imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.bench))
+                }
+            )
+
+        ViewRenderable.builder()
+            .setView(activity, R.layout.imgboard)
+            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+            .setSizer(FixedHeightViewSizer(1.7f))
+            .build()
+            .thenAccept(
+                Consumer { renderable: ViewRenderable ->
+                    flowerbedRenderable = renderable
+                    val imageView: ImageView = renderable.view as ImageView
+                    imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.flowerbed))
+                }
+            )
+
+        ViewRenderable.builder()
+            .setView(activity, R.layout.imgboard)
+            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+            .setSizer(FixedHeightViewSizer(1.7f))
+            .build()
+            .thenAccept(
+                Consumer { renderable: ViewRenderable ->
+                    bushRenderable = renderable
+                    val imageView: ImageView = renderable.view as ImageView
+                    imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.bush))
+                }
+            )
+
+        ViewRenderable.builder()
+            .setView(activity, R.layout.imgboard)
+            .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
+            .setSizer(FixedHeightViewSizer(1.7f))
+            .build()
+            .thenAccept(
+                Consumer { renderable: ViewRenderable ->
+                    kianuRenderable = renderable
+                    val imageView: ImageView = renderable.view as ImageView
+                    imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.kianu))
+                }
+            )
+
+    }
 }

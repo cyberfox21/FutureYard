@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".main.CameraFragment">
 
-    <androidx.fragment.app.FragmentContainerView
+    <fragment
         android:id="@+id/scene_form_fragment"
         android:name="com.google.ar.sceneform.ux.ArFragment"
         android:layout_width="match_parent"
