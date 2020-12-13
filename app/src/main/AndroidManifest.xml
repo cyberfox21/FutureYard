@@ -22,7 +22,8 @@
 
         <activity
             android:name=".loginregister.LoginActivity"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +31,8 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".main.MainActivity">
+        <activity android:name=".main.MainActivity"
+            android:windowSoftInputMode="adjustPan">
 
         </activity>
 
